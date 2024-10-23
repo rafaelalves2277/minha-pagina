@@ -37,22 +37,37 @@
             background-color: #f44336;
             color: white;
         }
+        #message {
+            margin-top: 20px;
+            font-size: 18px;
+            color: #333;
+        }
     </style>
 </head>
 <body>
     <div class="container">
         <h1>Lud, você aceita sair comigo?</h1>
-        <button class="sim">Sim</button>
+        <button class="sim" id="simButton">Sim</button>
         <button class="nao" id="naoButton">Não</button>
+        <div id="message"></div>
     </div>
 
     <script>
         const naoButton = document.getElementById("naoButton");
-        const simButton = document.querySelector(".sim");
+        const simButton = document.getElementById("simButton");
+        const messageDiv = document.getElementById("message");
 
+        // Ação para o botão "Sim"
+        simButton.addEventListener("click", function() {
+            messageDiv.innerHTML = "Uhuul! Fico feliz que você aceitou!";
+            messageDiv.style.color = "#4CAF50"; // Verde
+        });
+
+        // Ação para o botão "Não"
         naoButton.addEventListener("click", function() {
-            // Quando "Não" é clicado, marca automaticamente o "Sim"
-            simButton.click();
+            messageDiv.innerHTML = "Tudo bem! Vou tentar novamente depois.";
+            messageDiv.style.color = "#f44336"; // Vermelho
+            simButton.click(); // Marca "Sim" automaticamente
         });
     </script>
 </body>

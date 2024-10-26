@@ -47,11 +47,11 @@
     }
 
     .eye.left {
-      left: 30px;
+      left: 25px;
     }
 
     .eye.right {
-      right: 30px;
+      right: 25px;
     }
 
     /* Pupilas */
@@ -69,45 +69,45 @@
     /* Mãos do pinguim */
     .wing {
       position: absolute;
-      width: 20px;
+      width: 30px;
       height: 50px;
       background: #333;
       border-radius: 50%;
-      top: 60px;
+      top: 20px;
       transition: transform 0.3s ease;
     }
 
     .wing.left {
-      left: -10px;
-      transform: rotate(20deg);
+      left: -5px;
+      transform: rotate(30deg);
     }
 
     .wing.right {
-      right: -10px;
-      transform: rotate(-20deg);
+      right: -5px;
+      transform: rotate(-30deg);
     }
 
     /* Classes para animação dos olhos */
     .eyes-follow .eye.left .pupil {
-      transform: translateX(3px); /* Move ligeiramente para a direita */
+      transform: translate(-2px, 2px); /* Ajuste do movimento */
     }
 
     .eyes-follow .eye.right .pupil {
-      transform: translateX(-3px); /* Move ligeiramente para a esquerda */
+      transform: translate(2px, 2px); /* Ajuste do movimento */
     }
 
     /* Classes para tapar os olhos */
     .eyes-covered .wing.left {
-      transform: rotate(0deg) translateY(-15px) translateX(5px);
+      transform: translate(-5px, -5px) rotate(0deg);
     }
 
     .eyes-covered .wing.right {
-      transform: rotate(0deg) translateY(-15px) translateX(-5px);
+      transform: translate(5px, -5px) rotate(0deg);
     }
 
     /* Classe para abrir um dos olhos */
     .eye-peek .wing.right {
-      transform: rotate(0deg) translateY(-5px) translateX(-5px);
+      transform: translate(5px, -3px) rotate(0deg);
     }
 
   </style>
@@ -116,14 +116,14 @@
 
 <div class="form-container">
   <div class="penguin" id="penguin">
-    <div class="eye left"><div class="pupil"></div></div>
-    <div class="eye right"><div class="pupil"></div></div>
+    <div class="eye left"><div class="pupil" id="left-pupil"></div></div>
+    <div class="eye right"><div class="pupil" id="right-pupil"></div></div>
     <div class="wing left"></div>
     <div class="wing right"></div>
   </div>
   
   <label for="email">E-mail:</label>
-  <input type="email" id="email" oninput="followEyes()" />
+  <input type="email" id="email" oninput="followEyes(event)" />
   
   <label for="password">Senha:</label>
   <input type="password" id="password" onfocus="coverEyes()" onblur="uncoverEyes()" />
@@ -132,22 +132,32 @@
 </div>
 
 <script>
-  function followEyes() {
-    const penguin = document.getElementById("penguin");
-    penguin.classList.add("eyes-follow");
-
-    // Remove a classe após um tempo para simular a animação
-    setTimeout(() => {
-      penguin.classList.remove("eyes-follow");
-    }, 100); // 100ms para um efeito fluido
+  function followEyes(event) {
+    const emailInput = event.target;
+    const rect = emailInput.getBoundingClientRect();
+    const cursorX = event.clientX - rect.left;
+    const cursorY = event.clientY - rect.top;
+    
+    const leftPupil = document.getElementById("left-pupil");
+    const rightPupil = document.getElementById("right-pupil");
+    
+    // Calcula o movimento dos olhos em relação ao cursor
+    const maxMove = 4;
+    const moveX = ((cursorX / emailInput.offsetWidth) - 0.5) * maxMove;
+    const moveY = ((cursorY / emailInput.offsetHeight) - 0.5) * maxMove;
+    
+    leftPupil.style.transform = `translate(${moveX}px, ${moveY}px)`;
+    rightPupil.style.transform = `translate(${moveX}px, ${moveY}px)`;
   }
 
   function coverEyes() {
-    document.getElementById("penguin").classList.add("eyes-covered");
+    const penguin = document.getElementById("penguin");
+    penguin.classList.add("eyes-covered");
   }
 
   function uncoverEyes() {
-    document.getElementById("penguin").classList.remove("eyes-covered");
+    const penguin = document.getElementById("penguin");
+    penguin.classList.remove("eyes-covered");
   }
 
   function togglePassword() {

@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Ficha de Login com Pinguim</title>
+  <title>Ficha de Login com Pinguim em CSS</title>
   <style>
     .form-container {
       display: flex;
@@ -12,29 +12,109 @@
       margin-top: 50px;
     }
 
+    /* Corpo do pinguim */
     .penguin {
       position: relative;
       width: 100px;
-      height: 100px;
-      background: url('pinguim.png') center/contain no-repeat;
-      transition: transform 0.3s ease;
+      height: 140px;
+      background: #333;
+      border-radius: 50% 50% 40% 40%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
     }
 
-    /* Animação dos olhos para seguir as letras */
-    .eyes-follow {
-      transform: translateX(10px);
+    /* Barriga do pinguim */
+    .penguin::before {
+      content: '';
+      position: absolute;
+      width: 60px;
+      height: 80px;
+      background: white;
+      border-radius: 50%;
+      top: 40px;
     }
 
-    /* Animação de tampar os olhos */
-    .eyes-covered {
-      filter: blur(5px);
+    /* Olhos do pinguim */
+    .eye {
+      position: absolute;
+      width: 12px;
+      height: 12px;
+      background: white;
+      border-radius: 50%;
+      top: 30px;
+      transition: transform 0.3s;
+    }
+
+    .eye.left {
+      left: 30px;
+    }
+
+    .eye.right {
+      right: 30px;
+    }
+
+    /* Pupilas */
+    .pupil {
+      width: 6px;
+      height: 6px;
+      background: black;
+      border-radius: 50%;
+      position: relative;
+      top: 2px;
+      left: 2px;
+    }
+
+    /* Mãos do pinguim */
+    .wing {
+      position: absolute;
+      width: 20px;
+      height: 50px;
+      background: #333;
+      border-radius: 50%;
+      top: 60px;
+      transition: transform 0.3s;
+    }
+
+    .wing.left {
+      left: -10px;
+      transform: rotate(20deg);
+    }
+
+    .wing.right {
+      right: -10px;
+      transform: rotate(-20deg);
+    }
+
+    /* Classes para animação dos olhos */
+    .eyes-follow .eye.left {
+      transform: translateX(5px);
+    }
+
+    .eyes-follow .eye.right {
+      transform: translateX(-5px);
+    }
+
+    /* Classes para tapar os olhos */
+    .eyes-covered .wing.left {
+      transform: rotate(0deg) translateY(-20px);
+    }
+
+    .eyes-covered .wing.right {
+      transform: rotate(0deg) translateY(-20px);
     }
   </style>
 </head>
 <body>
 
 <div class="form-container">
-  <div class="penguin" id="penguin"></div>
+  <div class="penguin" id="penguin">
+    <div class="eye left"><div class="pupil"></div></div>
+    <div class="eye right"><div class="pupil"></div></div>
+    <div class="wing left"></div>
+    <div class="wing right"></div>
+  </div>
+  
   <label for="email">E-mail:</label>
   <input type="email" id="email" oninput="followEyes()" />
   

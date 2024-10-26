@@ -1,115 +1,75 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="pt-br">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Jogo da Forca</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            text-align: center;
-            margin-top: 50px;
-            background-color: #f0f0f0;
-        }
-        #hangman {
-            font-size: 100px;
-            margin: 20px;
-        }
-        #word {
-            font-size: 24px;
-            letter-spacing: 2px;
-            margin: 20px 0;
-            font-weight: bold;
-        }
-        .button {
-            margin: 5px;
-            padding: 10px;
-            font-size: 16px;
-            cursor: pointer;
-        }
-        #score {
-            font-size: 20px;
-            margin-top: 20px;
-        }
-        #message {
-            font-size: 18px;
-            margin-top: 20px;
-            color: red;
-        }
-        #letterInput {
-            padding: 10px;
-            font-size: 16px;
-        }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ficha de Login com Pinguim</title>
+  <style>
+    .form-container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      margin-top: 50px;
+    }
+
+    .penguin {
+      position: relative;
+      width: 100px;
+      height: 100px;
+      background: url('pinguim.png') center/contain no-repeat;
+      transition: transform 0.3s ease;
+    }
+
+    /* Animação dos olhos para seguir as letras */
+    .eyes-follow {
+      transform: translateX(10px);
+    }
+
+    /* Animação de tampar os olhos */
+    .eyes-covered {
+      filter: blur(5px);
+    }
+  </style>
 </head>
 <body>
-    <h1>Jogo da Forca</h1>
-    <div id="hangman">🪢</div>
-    <div id="word"></div>
-    <input type="text" id="letterInput" maxlength="1" placeholder="Uma letra">
-    <button class="button" onclick="guessLetter()">Enviar Letra</button>
-    <button class="button" onclick="restartGame()">Reiniciar Jogo</button>
-    <div id="score">Pontuação: 0</div>
-    <div id="message"></div>
 
-    <script>
-        const words = ["javascript", "programacao", "desenvolvimento", "computador", "tecnologia"];
-        let selectedWord, guessedLetters, incorrectGuesses, maxAttempts, score;
+<div class="form-container">
+  <div class="penguin" id="penguin"></div>
+  <label for="email">E-mail:</label>
+  <input type="email" id="email" oninput="followEyes()" />
+  
+  <label for="password">Senha:</label>
+  <input type="password" id="password" onfocus="coverEyes()" onblur="uncoverEyes()" />
+  
+  <input type="checkbox" id="show-password" onclick="togglePassword()"> Mostrar senha
+</div>
 
-        function initializeGame() {
-            selectedWord = words[Math.floor(Math.random() * words.length)];
-            guessedLetters = [];
-            incorrectGuesses = 0;
-            maxAttempts = 6;
-            score = 0;
-            document.getElementById('letterInput').value = '';
-            document.getElementById('message').textContent = '';
-            updateDisplay();
-        }
+<script>
+  function followEyes() {
+    document.getElementById("penguin").classList.add("eyes-follow");
+  }
 
-        function updateDisplay() {
-            const wordDisplay = selectedWord.split('').map(letter => guessedLetters.includes(letter) ? letter : '_').join(' ');
-            document.getElementById('word').textContent = wordDisplay;
-            document.getElementById('hangman').textContent = getHangmanStage();
-            document.getElementById('score').textContent = "Pontuação: " + score;
-            
-            if (!wordDisplay.includes('_')) {
-                document.getElementById('message').textContent = "Você venceu! A palavra é: " + selectedWord;
-                score += 10;
-            } else if (incorrectGuesses >= maxAttempts) {
-                document.getElementById('message').textContent = "Você perdeu! A palavra era: " + selectedWord;
-            }
-        }
+  function coverEyes() {
+    document.getElementById("penguin").classList.add("eyes-covered");
+  }
 
-        function getHangmanStage() {
-            const hangmanStages = ["🪢", "🪢", "🪢", "🪢", "🪢", "🪢", "💀"];
-            return hangmanStages[incorrectGuesses];
-        }
+  function uncoverEyes() {
+    document.getElementById("penguin").classList.remove("eyes-covered");
+  }
 
-        function guessLetter() {
-            const letter = document.getElementById('letterInput').value.toLowerCase();
-            document.getElementById('letterInput').value = '';
+  function togglePassword() {
+    const passwordInput = document.getElementById("password");
+    const penguin = document.getElementById("penguin");
+    
+    if (passwordInput.type === "password") {
+      passwordInput.type = "text";
+      penguin.classList.remove("eyes-covered");
+    } else {
+      passwordInput.type = "password";
+      penguin.classList.add("eyes-covered");
+    }
+  }
+</script>
 
-            if (guessedLetters.includes(letter) || letter.length !== 1 || !/[a-z]/.test(letter)) {
-                return;
-            }
-
-            guessedLetters.push(letter);
-            if (!selectedWord.includes(letter)) {
-                incorrectGuesses++;
-            }
-
-            updateDisplay();
-        }
-
-        function restartGame() {
-            initializeGame();
-        }
-
-        // Iniciar o jogo quando a página carregar
-        window.onload = initializeGame;
-    </script>
 </body>
 </html>
-
-

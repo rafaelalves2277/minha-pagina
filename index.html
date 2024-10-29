@@ -1,180 +1,36 @@
-<!DOCTYPE html>
-<html lang="pt-br">
+<html>
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Ficha de Login com Pinguim em CSS</title>
-  <style>
-    .form-container {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      margin-top: 50px;
-    }
-
-    /* Corpo do pinguim */
-    .penguin {
-      position: relative;
-      width: 100px;
-      height: 140px;
-      background: #333;
-      border-radius: 50% 50% 40% 40%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-
-    /* Barriga do pinguim */
-    .penguin::before {
-      content: '';
-      position: absolute;
-      width: 60px;
-      height: 80px;
-      background: white;
-      border-radius: 50%;
-      top: 40px;
-    }
-
-    /* Olhos do pinguim */
-    .eye {
-      position: absolute;
-      width: 12px;
-      height: 12px;
-      background: white;
-      border-radius: 50%;
-      top: 30px;
-      overflow: hidden;
-    }
-
-    .eye.left {
-      left: 25px;
-    }
-
-    .eye.right {
-      right: 25px;
-    }
-
-    /* Pupilas */
-    .pupil {
-      width: 6px;
-      height: 6px;
-      background: black;
-      border-radius: 50%;
-      position: relative;
-      top: 3px;
-      left: 3px;
-      transition: transform 0.1s ease;
-    }
-
-    /* Mãos do pinguim */
-    .wing {
-      position: absolute;
-      width: 30px;
-      height: 50px;
-      background: #333;
-      border-radius: 50%;
-      top: 20px;
-      transition: transform 0.3s ease;
-    }
-
-    .wing.left {
-      left: -5px;
-      transform: rotate(30deg);
-    }
-
-    .wing.right {
-      right: -5px;
-      transform: rotate(-30deg);
-    }
-
-    /* Classes para animação dos olhos */
-    .eyes-follow .eye.left .pupil {
-      transform: translate(-2px, 2px); /* Ajuste do movimento */
-    }
-
-    .eyes-follow .eye.right .pupil {
-      transform: translate(2px, 2px); /* Ajuste do movimento */
-    }
-
-    /* Classes para tapar os olhos */
-    .eyes-covered .wing.left {
-      transform: translate(-5px, -5px) rotate(0deg);
-    }
-
-    .eyes-covered .wing.right {
-      transform: translate(5px, -5px) rotate(0deg);
-    }
-
-    /* Classe para abrir um dos olhos */
-    .eye-peek .wing.right {
-      transform: translate(5px, -3px) rotate(0deg);
-    }
-
-  </style>
+    <title>Minha Primeira Página</title>
 </head>
 <body>
-
-<div class="form-container">
-  <div class="penguin" id="penguin">
-    <div class="eye left"><div class="pupil" id="left-pupil"></div></div>
-    <div class="eye right"><div class="pupil" id="right-pupil"></div></div>
-    <div class="wing left"></div>
-    <div class="wing right"></div>
-  </div>
-  
-  <label for="email">E-mail:</label>
-  <input type="email" id="email" oninput="followEyes(event)" />
-  
-  <label for="password">Senha:</label>
-  <input type="password" id="password" onfocus="coverEyes()" onblur="uncoverEyes()" />
-  
-  <input type="checkbox" id="show-password" onclick="togglePassword()"> Mostrar senha
-</div>
-
-<script>
-  function followEyes(event) {
-    const emailInput = event.target;
-    const rect = emailInput.getBoundingClientRect();
-    const cursorX = event.clientX - rect.left;
-    const cursorY = event.clientY - rect.top;
+    <h1>Página de Rafael Alves</h1>
     
-    const leftPupil = document.getElementById("left-pupil");
-    const rightPupil = document.getElementById("right-pupil");
+    <h2>Sobre Mim</h2>
+    <p>Olá, meu nome é Rafael. Sou aluno do IFRJ, onde estudo Informática. Nasci no estado do Rio de Janeiro e tenho várias paixões. Gosto de jogar vôlei, me divertir com games e ler livros.</p>
     
-    // Calcula o movimento dos olhos em relação ao cursor
-    const maxMove = 4;
-    const moveX = ((cursorX / emailInput.offsetWidth) - 0.5) * maxMove;
-    const moveY = ((cursorY / emailInput.offsetHeight) - 0.5) * maxMove;
+    <h2>Meu Curso</h2>
+    <p>Estou fazendo um curso de programação no IFRJ porque acho que tem tudo a ver comigo.
+Programação está em tudo hoje em dia e, sabendo programar, eu posso criar várias coisas,
+resolver problemas e abrir muitas portas, tanto no trabalho quanto em projetos meus.</p>
     
-    leftPupil.style.transform = `translate(${moveX}px, ${moveY}px)`;
-    rightPupil.style.transform = `translate(${moveX}px, ${moveY}px)`;
-  }
-
-  function coverEyes() {
-    const penguin = document.getElementById("penguin");
-    penguin.classList.add("eyes-covered");
-  }
-
-  function uncoverEyes() {
-    const penguin = document.getElementById("penguin");
-    penguin.classList.remove("eyes-covered");
-  }
-
-  function togglePassword() {
-    const passwordInput = document.getElementById("password");
-    const penguin = document.getElementById("penguin");
+    <p>Escolhi esse curso porque quero fazer algo que realmente faça sentido para a minha vida e me dê um futuro interessante, cheio de possibilidades. 
+Sempre tive a vontade de entender como as coisas funcionam e de construir algo do zero.
+E, claro, também vou usar essas habilidades tanto para estudar quanto para me divertir.</p>
     
-    if (passwordInput.type === "password") {
-      passwordInput.type = "text";
-      penguin.classList.remove("eyes-covered");
-      penguin.classList.add("eye-peek");
-    } else {
-      passwordInput.type = "password";
-      penguin.classList.remove("eye-peek");
-      penguin.classList.add("eyes-covered");
-    }
-  }
-</script>
+    <h2>Meu filme favorito</h2>
+    <p>Meu Filme Favorito: Vingadores: Ultimato
 
+Meu filme favorito é Vingadores: Ultimato, o último filme da saga principal dos Vingadores. Para mim, ele representa o auge de toda a história que a Marvel construiu ao longo dos anos.
+      Ultimato não só encerra um ciclo de filmes, mas também traz um fechamento emocional para personagens que acompanhei desde o começo.
+      Enfim, Vingadores: Ultimato é meu filme favorito porque traz ação, emoção e uma sensação de fechamento incrível. 
+      Ele representa muito mais do que só uma história de super-heróis – é uma conclusão épica para anos de histórias e um adeus a personagens que marcaram uma geração.  .</p>
+    
+    <h2>Uma Personalidade Pública que Admiro</h2>
+    <p>Outra figura que me inspira é Bernardinho, o renomado técnico da seleção brasileira de vôlei.
+Ele teve uma carreira brilhante como jogador, sendo um dos melhores da sua época, e depois se destacou ainda mais como treinador.</p>
+    
+    <p>Admiro sua determinação e a forma como ele lidera as equipes, sempre buscando a excelência.
+Seu trabalho à frente da seleção rendeu muitos títulos, e sua paixão pelo esporte é contagiante.
+Para mim, ele é um exemplo de como a dedicação e o esforço podem levar ao sucesso em qualquer área.</p>
 </body>
 </html>

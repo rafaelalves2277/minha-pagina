@@ -1,37 +1,92 @@
-<html>
+<!DOCTYPE html>
+<html lang="pt-br">
 <head>
-    <title>Minha Primeira Página</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stick Battle</title>
+    <style>
+        /* Estilo básico do corpo */
+        body, html {
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #333;
+            overflow: hidden;
+            color: #fff;
+            font-family: Arial, sans-serif;
+        }
+
+        /* Área do jogo */
+        #game-container {
+            position: relative;
+            width: 100vw;
+            height: 100vh;
+            overflow: hidden;
+            background: #222;
+        }
+
+        /* Boneco estilo stick */
+        .stickman {
+            position: absolute;
+            width: 20px;
+            height: 60px;
+            background-color: #fff;
+            transform-origin: center;
+            transition: all 0.1s;i
+        }
+
+        /* Indicadores de vida e FPS */
+        .health-bar {
+            position: absolute;
+            width: 100px;
+            height: 10px;
+            background-color: red;
+            top: 10px;
+            left: 10px;
+        }
+
+        .fps-counter {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            font-size: 14px;
+        }
+    </style>
 </head>
 <body>
-    <h1>Página de Rafael Alves</h1>
-    
-    <h2>Sobre Mim</h2>
-    <p>Olá, meu nome é Rafael. Sou aluno do IFRJ, onde estudo Informática. Nasci no estado do Rio de Janeiro e tenho várias paixões. Gosto de jogar vôlei, me divertir com games e ler livros.</p>
-    
-    <h2>Meu Curso</h2>
-    <p>Estou fazendo um curso de programação no IFRJ porque acho que tem tudo a ver comigo.
-Programação está em tudo hoje em dia e, sabendo programar, eu posso criar várias coisas,
-resolver problemas e abrir muitas portas, tanto no trabalho quanto em projetos meus.</p>
-    
-    <p>Escolhi esse curso porque quero fazer algo que realmente faça sentido para a minha vida e me dê um futuro interessante, cheio de possibilidades. 
-Sempre tive a vontade de entender como as coisas funcionam e de construir algo do zero.
-E, claro, também vou usar essas habilidades tanto para estudar quanto para me divertir.</p>
-    
-    <h2>Meu filme favorito</h2>
-    
-    <p>Meu Filme Favorito: Vingadores: Ultimato
 
- o último filme da saga principal dos Vingadores. Para mim, ele representa o auge de toda a história que a Marvel construiu ao longo dos anos.
-      Ultimato não só encerra um ciclo de filmes, mas também traz um fechamento emocional para personagens que acompanhei desde o começo.
-      Enfim, Vingadores: Ultimato é meu filme favorito porque traz ação, emoção e uma sensação de fechamento incrível. 
-      Ele representa muito mais do que só uma história de super-heróis – é uma conclusão épica para anos de histórias e um adeus a personagens que marcaram uma geração.  .</p>
+<div id="game-container">
+    <!-- Indicador de vida do jogador 1 -->
+    <div class="health-bar" id="health-player1"></div>
     
-    <h2>Uma Personalidade Pública que Admiro</h2>
-    <p>Outra figura que me inspira é Bernardinho, o renomado técnico da seleção brasileira de vôlei.
-Ele teve uma carreira brilhante como jogador, sendo um dos melhores da sua época, e depois se destacou ainda mais como treinador.</p>
+    <!-- Indicador de vida do jogador 2 -->
+    <div class="health-bar" id="health-player2" style="right: 10px; left: auto;"></div>
     
-    <p>Admiro sua determinação e a forma como ele lidera as equipes, sempre buscando a excelência.
-Seu trabalho à frente da seleção rendeu muitos títulos, e sua paixão pelo esporte é contagiante.
-Para mim, ele é um exemplo de como a dedicação e o esforço podem levar ao sucesso em qualquer área.</p>
+    <!-- Indicador de FPS -->
+    <div class="fps-counter" id="fps-counter">FPS: 0</div>
+    
+    <!-- Boneco 1 -->
+    <div class="stickman" id="stickman1" style="top: 70%; left: 25%;"></div>
+    
+    <!-- Boneco 2 -->
+    <div class="stickman" id="stickman2" style="top: 70%; right: 25%; left: auto;"></div>
+</div>
+
+<script>
+    // Função para calcular o FPS
+    let lastRender = Date.now();
+    function updateFPS() {
+        const now = Date.now();
+        const fps = Math.round(1000 / (now - lastRender));
+        lastRender = now;
+        document.getElementById('fps-counter').textContent = 'FPS: ' + fps;
+        requestAnimationFrame(updateFPS);
+    }
+    updateFPS();
+</script>
+
 </body>
 </html>

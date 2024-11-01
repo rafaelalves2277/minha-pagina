@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Stick Battle - Flamengo vs Vasco</title>
     <style>
-        /* Estilo básico do corpo */
         body, html {
             margin: 0;
             padding: 0;
@@ -19,61 +18,19 @@
             font-family: Arial, sans-serif;
         }
 
-        /* Área do jogo */
         #game-container {
             position: relative;
             width: 100vw;
             height: 100vh;
-            overflow: hidden;
             background: #222;
         }
 
-        /* Estilo dos bonecos com esqueleto humanoide */
-        .stickman {
-            position: absolute;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            flex-direction: column;
-            transform-origin: center;
-            transition: all 0.1s;
-        }
-        
-        /* Partes do corpo */
-        .head {
-            width: 25px;
-            height: 25px;
-            border-radius: 50%;
-            background-color: #fff;
-        }
-        .body {
-            width: 10px;
-            height: 40px;
-            background-color: #fff;
-        }
-        .arm, .leg {
-            width: 10px;
-            height: 30px;
-            background-color: #fff;
-            position: absolute;
-        }
-
-        /* Estilo para Flamengo e Vasco */
-        #stickman1 .body {
-            background-color: red; /* Flamengo */
-        }
-        #stickman2 .body {
-            background-color: navy; /* Vasco */
-        }
-
-        /* Indicadores de vida e FPS */
         .health-bar {
             position: absolute;
             width: 100px;
             height: 10px;
             background-color: red;
             top: 10px;
-            left: 10px;
         }
 
         .fps-counter {
@@ -83,6 +40,41 @@
             font-size: 14px;
         }
 
+        .stickman {
+            position: absolute;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+        }
+
+        .player-jersey {
+            width: 20px;
+            height: 60px;
+            border-radius: 5px;
+            position: relative;
+        }
+
+        .fl {
+            background-color: red; /* Flamengo */
+        }
+
+        .vas {
+            background-color: navy; /* Vasco */
+        }
+
+        /* Animações */
+        @keyframes attack {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
+
+        @keyframes bloodEffect {
+            0% { opacity: 1; }
+            100% { opacity: 0; transform: translateY(-10px); }
+        }
+
         /* Efeitos de sangue */
         .blood {
             position: absolute;
@@ -90,45 +82,60 @@
             height: 5px;
             background-color: red;
             border-radius: 50%;
+            animation: bloodEffect 0.3s forwards;
+        }
+
+        /* Efeitos de fundo */
+        #background {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background-image: url('assets/background.jpg');
+            background-size: cover;
+            z-index: -1;
+        }
+
+        /* Game Over Screen */
+        .game-over {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: rgba(0, 0, 0, 0.8);
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            color: white;
+            display: none;
         }
     </style>
 </head>
 <body>
 
+<div id="background"></div>
 <div id="game-container">
-    <!-- Indicador de vida do jogador 1 -->
     <div class="health-bar" id="health-player1"></div>
-    
-    <!-- Indicador de vida do jogador 2 -->
     <div class="health-bar" id="health-player2" style="right: 10px; left: auto;"></div>
-    
-    <!-- Indicador de FPS -->
     <div class="fps-counter" id="fps-counter">FPS: 0</div>
     
-    <!-- Boneco 1 (Flamengo) -->
-    <div class="stickman" id="stickman1" style="top: 70%; left: 25%;">
-        <div class="head"></div>
-        <div class="body"></div>
-        <div class="arm" style="top: 10px; left: -15px;"></div>
-        <div class="arm" style="top: 10px; right: -15px;"></div>
-        <div class="leg" style="top: 50px; left: -5px;"></div>
-        <div class="leg" style="top: 50px; right: -5px;"></div>
-    </div>
-    
-    <!-- Boneco 2 (Vasco) -->
-    <div class="stickman" id="stickman2" style="top: 70%; right: 25%; left: auto;">
-        <div class="head"></div>
-        <div class="body"></div>
-        <div class="arm" style="top: 10px; left: -15px;"></div>
-        <div class="arm" style="top: 10px; right: -15px;"></div>
-        <div class="leg" style="top: 50px; left: -5px;"></div>
-        <div class="leg" style="top: 50px; right: -5px;"></div>
+    <div class="stickman" id="stickman1" style="left: 25%;"><div class="player-jersey fl"></div></div>
+    <div class="stickman" id="stickman2" style="right: 25%;"><div class="player-jersey vas"></div></div>
+
+    <div class="game-over" id="gameOverScreen">
+        <h2>Game Over</h2>
+        <p id="winnerText"></p>
+        <button onclick="restartGame()">Reiniciar Jogo</button>
     </div>
 </div>
 
+<audio id="hitSound" src="assets/sounds/hit.mp3" preload="auto"></audio>
+<audio id="hitPlayerSound" src="assets/sounds/hit_player.mp3" preload="auto"></audio>
+<audio id="gameOverSound" src="assets/sounds/game_over.mp3" preload="auto"></audio>
+
 <script>
-    // Função para calcular o FPS
     let lastRender = Date.now();
+
+    // Atualiza o contador de FPS
     function updateFPS() {
         const now = Date.now();
         const fps = Math.round(1000 / (now - lastRender));
@@ -138,7 +145,17 @@
     }
     updateFPS();
 
-    // Função de animação para andar
+    // Inicialização das barras de vida
+    let player1Health = 100;
+    let player2Health = 100;
+
+    function updateHealthBars() {
+        document.getElementById('health-player1').style.width = player1Health + 'px';
+        document.getElementById('health-player2').style.width = player2Health + 'px';
+    }
+    updateHealthBars();
+
+    // Funções de controle dos jogadores
     document.addEventListener('keydown', (e) => {
         const player1 = document.getElementById('stickman1');
         const player2 = document.getElementById('stickman2');
@@ -156,21 +173,76 @@
             case 'a': // Player 2 anda para a esquerda
                 player2.style.left = (parseInt(player2.style.left) - 10) + 'px';
                 break;
-            case ' ': // Soco
-                addBlood(player2);
+            case ' ': // Player 1 ataca
+                attack(player1, player2);
+                break;
+            case 'Enter': // Player 2 ataca
+                attack(player2, player1);
                 break;
         }
     });
 
-    // Função para criar efeito de sangue ao socar
+    // Função para atacar e aplicar danos
+    function attack(attacker, target) {
+        const hitSound = document.getElementById('hitSound');
+        const hitPlayerSound = document.getElementById('hitPlayerSound');
+        
+        attacker.style.animation = 'attack 0.2s forwards';
+        
+        setTimeout(() => {
+            attacker.style.animation = '';
+            const targetHealth = target === document.getElementById('stickman1') ? 'player1Health' : 'player2Health';
+            if (Math.random() < 0.5) { // Chance de acerto
+                if (targetHealth === 'player1Health') {
+                    player1Health -= 10;
+                    hitSound.play();
+                } else {
+                    player2Health -= 10;
+                    hitPlayerSound.play();
+                }
+                addBlood(target);
+                updateHealthBars();
+                checkGameOver();
+            }
+        }, 200);
+    }
+
+    // Função para criar efeito de sangue ao atacar
     function addBlood(target) {
         const blood = document.createElement('div');
         blood.classList.add('blood');
-        blood.style.left = target.offsetLeft + 'px';
-        blood.style.top = target.offsetTop + 'px';
+        blood.style.left = (target.offsetLeft + 10) + 'px';
+        blood.style.top = (target.offsetTop + 30) + 'px';
         document.getElementById('game-container').appendChild(blood);
         setTimeout(() => blood.remove(), 300);
     }
+
+    // Checa se o jogo acabou
+    function checkGameOver() {
+        if (player1Health <= 0 || player2Health <= 0) {
+            const winner = player1Health > player2Health ? 'Jogador 1 (Flamengo)' : 'Jogador 2 (Vasco)';
+            document.getElementById('winnerText').textContent = winner + ' venceu!';
+            document.getElementById('gameOverScreen').style.display = 'block';
+            document.getElementById('gameOverSound').play();
+        }
+    }
+
+    // Reinicia o jogo
+    function restartGame() {
+        player1Health = 100;
+        player2Health = 100;
+        updateHealthBars();
+        document.getElementById('gameOverScreen').style.display = 'none';
+        document.getElementById('stickman1').style.left = '25%';
+        document.getElementById('stickman2').style.right = '25%';
+    }
+
+    // Atualiza a barra de vida a cada 100ms
+    setInterval(() => {
+        if (player1Health <= 0 || player2Health <= 0) {
+            clearInterval(this);
+        }
+    }, 100);
 </script>
 
 </body>
